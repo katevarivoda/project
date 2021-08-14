@@ -1,15 +1,19 @@
 import math
 
-from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import NoAlertPresentException
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
+
+from pages.locators import BasePageLocators
 
 
 class BasePage():
 
-    def __init__(self, browser, url, timeout=100):
+    def __init__(self, browser, url, timeout=60):
         self.browser = browser
         self.url = url
-        self.browser.implicitly_wait(timeout)
+        #self.browser.implicitly_wait(timeout)
 
     def open(self):
         self.browser.get(self.url)
@@ -34,3 +38,29 @@ class BasePage():
             alert.accept()
         except NoAlertPresentException:
             print("No second alert presented")
+
+    def is_not_element_present(self, how, what, timeout=40):
+        try:
+            WebDriverWait(self.browser, timeout).until(EC.presence_of_element_located((how, what)))
+            result = False
+        except TimeoutException:
+            result = True
+
+        assert result is True, 'Element present!'
+
+    def is_disappeared(self, how, what, timeout=4):
+        try:
+            WebDriverWait(self.browser, timeout, 10, TimeoutException). \
+                until_not(EC.presence_of_element_located((how, what)))
+            result = True
+        except TimeoutException:
+            result = False
+
+        assert result is True, 'Element appeared!'
+
+    def go_to_login_page(self):
+        link = self.browser.find_element(*BasePageLocators.LOGIN_LINK)
+        link.click()
+
+    def should_be_login_link(self):
+        assert self.is_element_present(*BasePageLocators.LOGIN_LINK), "Login link is not presented"
