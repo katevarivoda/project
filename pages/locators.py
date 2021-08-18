@@ -18,7 +18,7 @@ class LoginPageLocators:
 
 
 class ProductPageLocators:
-    ADD_BUTTON = (By.XPATH, "//button[contains(text(),'Add to basket')]")
+    ADD_BUTTON = (By.CSS_SELECTOR, ".btn-add-to-basket")
     BOOK_NAME_ADDED_TO_CART = (By.XPATH, "//*[@id='messages']/div[1]/div/strong")
     BOOK_NAME = (By.XPATH, "//div[@class='col-sm-6 product_main']/h1")
     BOOK_PRICE = (By.XPATH, "//div[@class='col-sm-6 product_main']/p[@class='price_color']")
