@@ -1,4 +1,4 @@
-from .locators import LoginPageLocators
+from .locators import LoginPageLocators, BasePageLocators
 from .base_page import BasePage
 
 
@@ -17,3 +17,17 @@ class LoginPage(BasePage):
 
     def should_be_register_form(self):
         assert self.is_element_present(*LoginPageLocators.REGISTER_FORM), "Register form is not present"
+
+    def register_new_user(self, email, password):
+        email_address = self.browser.find_element(*LoginPageLocators.EMAIL)
+        email_address.send_keys(email)
+        password1 = self.browser.find_element(*LoginPageLocators.PASSWORD)
+        password1.send_keys(password)
+        password2 = self.browser.find_element(*LoginPageLocators.CONFIRM_PASSWORD)
+        password2.send_keys(password)
+        register_button = self.browser.find_element(*LoginPageLocators.REGISTER_BTN)
+        register_button.click()
+
+    def should_be_authorized_user(self):
+        assert self.is_element_present(*BasePageLocators.USER_ICON), "User icon is not presented," \
+                                                                     " probably unauthorised user"
